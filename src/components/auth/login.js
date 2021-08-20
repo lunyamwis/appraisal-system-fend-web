@@ -32,7 +32,8 @@ function Login(props) {
     const [loginUser, { loading }] = useMutation(LOGIN_USER, {
         update(_, result) {
             context.login(result.data);
-            window.location.href = '/admin/dashboard'
+            console.log(result.data)
+            window.location.href = '/performancemanager'
         },
         onError(err) {
             try {
