@@ -1,51 +1,189 @@
+@import url("https://fonts.googleapis.com/css2?family=Spectral&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap");
 .centered-content {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .paddingBottom {
-    padding-bottom: 4vh;
+  padding-bottom: 4vh;
 }
 
 .center {
-    text-align: center;
+  text-align: center;
 }
 
 .clear-top {
-    margin-top: 3vh;
+  margin-top: 3vh;
 }
 
 .float-left {
-    text-align: left;
-    justify-content: flex-start;
+  text-align: left;
+  justify-content: flex-start;
 }
 
 .visible {
-display: block;
+  display: block;
 }
 
 .clear {
-    color: #fff;
+  color: #fff;
 }
 
 .clear-text-top {
-    padding-top: 1.5vh !important;
-    padding-left: 1vw !important;
+  padding-top: 1.5vh !important;
+  padding-left: 1vw !important;
 }
 
 .app-container {
-    width: 100%;
-    margin: auto;
-    margin-top: 5vh;
+  width: 100%;
+  margin: auto;
+  margin-top: 5vh;
 }
 
 .content-wrapper {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 2.5%;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 2.5%;
 }
 
 .clear-left {
-    float: right;
-    margin-left: 30%;
+  float: right;
+  margin-left: 30%;
+}
+
+.employee-container {
+  display: flexbox;
+  flex-flow: column;
+  align-items: center;
+  max-width: 1120px;
+  width: 90%;
+  margin: 0 auto;
+  font-family: "Noto Sans TC", sans-serif;
+}
+
+.employee-img {
+  width: 100px;
+  height: 100px;
+}
+
+#float {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  bottom: 40px;
+  right: 40px;
+  background-color: teal;
+  color: #fff;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
+}
+
+#sidebar {
+  font-size: 1.25em;
+  width: 250px;
+  font-family: "Noto Sans TC", sans-serif;
+  align-items: left;
+  padding-top: 60px;
+  font-weight: lighter;
+  background-color: teal;
+}
+#card {
+  margin-top: 100px;
+  display: flex;
+  border-radius: 10px;
+  width: 350px;
+  height: auto;
+  /*background-color: rgb(211, 208, 36);*/
+  flex: 1;
+  margin: 0 1rem;
+  font-family: "Noto Sans TC", sans-serif;
+  opacity: 0.9;
+}
+
+#employee-icon {
+  margin-top: 24px;
+}
+
+#form {
+  margin: auto;
+  font-family: "Noto Sans TC", sans-serif;
+}
+#form-cont {
+  display: flexbox;
+}
+#form-seg {
+  border-radius: 20px;
+  justify-content: center;
+  display: flexbox;
+}
+h3,
+h4 {
+  color: rgb(255, 255, 255);
+  font-family: "Noto Sans TC", sans-serif;
+  font-weight: lighter;
+  font-style: normal;
+}
+#form-hd {
+  background-color: rgb(0, 128, 128);
+}
+h5 {
+  color: rgb(0, 128, 128);
+  font-family: "Noto Sans TC", sans-serif;
+  font-weight: lighter;
+}
+#menu-btn {
+  float: left;
+  background-color: teal;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 60px;
+}
+#navbar {
+  height: 50px;
+}
+#menu-ic {
+  color: #fff;
+}
+#side-ic {
+  color: #fff;
+}
+#side-srch {
+  width: 100px;
+  font-size: 0.95em;
+}
+#submit-btn {
+  background-color: rgb(0, 128, 128);
+}
+#table-hd {
+  background-color: teal;
+  color: white;
+}
+#profile-hd {
+  margin-top: 30px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: teal;
+  font-family: "Noto Sans TC", sans-serif;
+}
+#profile-met {
+  font-size: 1.5em;
+  font-weight: normal;
+  color: teal;
+  font-family: "Noto Sans TC", sans-serif;
+}
+#profile-table,
+#table-emp {
+  color: teal;
+}
+#tb-link {
+  color: teal;
+}
+#dummy-tl {
+  color: teal;
+}
+#modal {
+  border-radius: 20px;
 }
