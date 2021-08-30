@@ -49,16 +49,6 @@ mutation tokenAuth(
       image
       phoneNumber
       roles
-      agency {
-        id
-        name
-        officeLocation
-        imageUrl
-        agencyEmail
-        postalCode
-        boxNumber
-        isActive
-      }
     }
   }
 }
