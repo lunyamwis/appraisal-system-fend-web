@@ -1,19 +1,3 @@
-<<<<<<< HEAD
-import React, { Component } from "react";
-import Navbar from "./navbar";
-
-class Home extends Component {
-  render() {
-    return (
-      <div>
-        <Navbar />
-      </div>
-    );
-  }
-}
-
-export default Home;
-=======
 import React from 'react';
 import {
   Grid,
@@ -119,4 +103,3 @@ export default function HomeOverview() {
     </div>
   )
 }
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd

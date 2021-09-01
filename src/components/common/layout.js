@@ -7,10 +7,6 @@ import {
   Sidebar,
   Button,
   Grid,
-<<<<<<< HEAD
-=======
-  Icon
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/auth";
@@ -49,20 +45,12 @@ export default function Layout(props) {
   );
 
   const options = [
-<<<<<<< HEAD
-    { key: "user", text: "Account", icon: "user", value: "staff/profile" },
-=======
     { key: "user", text: "Account", icon: "user", value: "/" },
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
     {
       key: "settings",
       text: "Settings",
       icon: "settings",
-<<<<<<< HEAD
-      value: "staff/settings",
-=======
       value: "/",
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
     },
     { key: "sign-out", text: "Sign Out", icon: "sign out", value: "logout" },
   ];
@@ -101,11 +89,7 @@ export default function Layout(props) {
                   active={activeItem === "dashboard"}
                   onClick={handleItemClick}
                   as={Link}
-<<<<<<< HEAD
-                  to="/admin/dashboard"
-=======
                   to="/performancemanager/employee-records"
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
                 />
               )}
             {context.user && !isHome && (
@@ -114,44 +98,17 @@ export default function Layout(props) {
                 active={activeItem === "records"}
                 onClick={handleItemClick}
                 as={Link}
-<<<<<<< HEAD
-                to="/staff/dashboard/overview"
-              />
-            )}
-            {context.user && !isHome && (
-              <Menu.Item
-                name="billing"
-                active={activeItem === "billing"}
-                onClick={handleItemClick}
-=======
                 to="/performancemanager"
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
               />
             )}
             {context.user && !isHome && (
               <Menu.Item
-<<<<<<< HEAD
-                name="receipts"
-                active={activeItem === "receipts"}
-                onClick={handleItemClick}
-                as={Link}
-                to="/staff/dashboard/receipt/view-receipts"
-=======
                 name="billing"
                 active={activeItem === "billing"}
-                onClick={handleItemClick}
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
-              />
-            )}
-            {context.user && !isHome && (
-              <Menu.Item
-                name="reports"
-                active={activeItem === "reports"}
                 onClick={handleItemClick}
                 position="left"
               />
             )}
-            <Image src="" size="small" href="/" />
             {context.user && !isHome && (
               <Menu.Item position="right">
                 <Dropdown
@@ -170,11 +127,7 @@ export default function Layout(props) {
           >
             <Sidebar
               as={Menu}
-<<<<<<< HEAD
-              style={{ background: "white" }}
-=======
               style={{ background: "teal" }}
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
               animation="overlay"
               icon="labeled"
               inverted
@@ -187,7 +140,6 @@ export default function Layout(props) {
               <Menu.Item
                 style={{ color: "black", textAlign: "left" }}
                 as={Link}
-<<<<<<< HEAD
                 to="/"
                 onClick={handleHideClick}
               >
@@ -266,84 +218,6 @@ export default function Layout(props) {
                   />
                 </Menu.Menu>
               </Menu.Item>
-=======
-                to="/performancemanager"
-                onClick={handleHideClick}
-              >
-                <Icon name='home' />
-              </Menu.Item>
-              <Menu.Item
-                style={{ color: "black"}}
-                name="employees"
-                as={Link}
-                to="/performancemanager/employee-records"
-                active={activeItem === "list-employees"}
-                onClick={handleItemClick}
-              >
-                <Icon name='users'/>
-                Employee
-              </Menu.Item>
-              
-              <Menu.Item
-                style={{ color: "black"}}
-                name="employers"
-                as={Link}
-                to="/performancemanager/employer-records"
-                active={activeItem === "list-employers"}
-                onClick={handleItemClick}
-              >
-                <Icon name='user circle'/>
-                Employer
-              </Menu.Item>
-
-              <Menu.Item
-                style={{ color: "black"}}
-                name="titles"
-                as={Link}
-                to="/performancemanager/title-records"
-                active={activeItem === "list-titles"}
-                onClick={handleItemClick}
-              >
-                <Icon name='id badge'/>
-                Titles
-              </Menu.Item>
-
-              <Menu.Item
-                style={{ color: "black"}}
-                name="courses"
-                as={Link}
-                to="/performancemanager/course-records"
-                active={activeItem === "list-courses"}
-                onClick={handleItemClick}
-              >
-                <Icon name='certificate'/>
-                Training
-              </Menu.Item>
-              <Menu.Item
-                style={{ color: "black"}}
-                name="grade"
-                as={Link}
-                to="/performancemanager/grade-records"
-                active={activeItem === "list-grades"}
-                onClick={handleItemClick}
-              >
-                <Icon name='money bill alternate outline'/>
-                Pay Grades
-              </Menu.Item>
-
-              <Menu.Item
-                style={{ color: "black"}}
-                name="department"
-                as={Link}
-                to="/performancemanager/department-records"
-                active={activeItem === "list-departments"}
-                onClick={handleItemClick}
-              >
-                <Icon name='address card'/>
-                Departments/Teams
-              </Menu.Item>
-              
->>>>>>> f7a7bf703cc629f4ddbbc531149b990384349fdd
             </Sidebar>
             <Sidebar.Pusher dimmed={visible}>
               <BaseRouter props={props} />

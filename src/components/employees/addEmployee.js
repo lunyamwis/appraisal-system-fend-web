@@ -21,7 +21,9 @@ import * as yup from 'yup';
 import PhoneInput from "react-phone-input-2";
 import { AuthContext } from "../../context/auth";
 import { GET_DEPARTMENTS } from '../departments/queries';
+import { GET_TITLES } from '../title/queries';
 import DepartmentDropdown from '../dropdowns/listDepartments';
+import TitleDropdown from '../dropdowns/listTitles';
 
 
 
@@ -43,6 +45,10 @@ export default function AddNewEmployee({ props }) {
   const [selectedDepartment, setSelectedDepartment] = useState({
     search: "", page: 1, limit: 10
   });
+  const [titles, setTitles] = useState();
+  const [selectedTitle, setSelectedTitle] = useState({
+    search: "", page: 1, limit: 10
+  })
   const [responseErrors, setResponseErrors] = useState([]);
   const status = [
     {
@@ -103,9 +109,18 @@ export default function AddNewEmployee({ props }) {
     if (departmentData) {
       setDepartments(departmentData.departments.items);
     }
-  }, [departmentData]);
+  }, [departmentData]);//ask about this..
 
   console.log(departments)
+
+  const { data: titleData } = useQuery(GET_TITLES, {
+    variables: selectedTitle
+  });
+  useEffect(() => {
+    if (titleData) {
+      setTitles(titleData.titles.items);
+    }
+  }, [titleData]);
 
   const [addEmployee, { loading }] = useCallback(useMutation(CREATE_EMPLOYEE, {
     update(_, result) {
@@ -182,7 +197,15 @@ export default function AddNewEmployee({ props }) {
     setValues({ ...values, ...data, updated: true });
     // validate()
   }
-
+  const handleOnTitleSearch = (e) => {
+    setSelectedTitle({ ...selectedTitle, search: e.target.value })
+  }
+  const handleOnTitleChange = (e, { value }) => {
+    e.preventDefault()
+    const data = { title: value }
+    setValues({ ...values, ...data, updated: true });
+    // validate()
+  }
 
 
   const handleDismiss = () => {
@@ -376,13 +399,14 @@ export default function AddNewEmployee({ props }) {
               <h3>Job Details</h3>
             </Header>
             <Form.Group widths="equal">
-              <Form.Input
-                fluid
-                label={<h5>Job title</h5>}
-                placeholder="Job Title"
-                name="jobtitle"
-                required
-              />
+            <Form.Field error={errors.errorPaths.includes('title')}>
+                <label>Title</label>
+                {titles && <TitleDropdown
+                  titles={titles}
+                  handleOnTitleSearch={handleOnTitleSearch}
+                  handleOnTitleChange={handleOnTitleChange}
+                />}
+              </Form.Field>
               <Form.Field required error={errors.errorPaths.includes('hiringDate')}>
                 <label>Date Of Hire</label>
 

@@ -4,11 +4,13 @@ export const CREATE_DEPARTMENT = gql`
 mutation createDepartment(
   $departmentName:String
   $payGrade:String
+  $subDepartment:String
 ){
   createDepartment(input:{
       
     departmentName:$departmentName
     payGrade:$payGrade
+    subDepartment:$subDepartment
   })
   
   {
@@ -22,6 +24,10 @@ mutation createDepartment(
         payGrade{
           id
           gradeName
+        }
+        subDepartment{
+          id
+          subDepartnameName
         }
       }
     
@@ -52,6 +58,10 @@ query getDepartments ($search:String, $page:Int, $limit:Int){
       payGrade{
         gradeName
       }
+      subDepartment{
+        id
+        subDepartnameName
+      }
   }}}
 `
 
@@ -67,6 +77,11 @@ query getDepartment ($id:String){
       id
       gradeName
     }
+    subDepartment{
+      deletedAt
+      id
+      subDepartnameName
+    }
   
 }}`
 
@@ -75,12 +90,14 @@ mutation updateDepartment (
   $id:String!
   $departmentName:String
   $payGrade:String
+  $subDepartment:String
 ){
   updateDepartment(
     id:$id
     input:{
       departmentName:$departmentName
       payGrade:$payGrade
+      subDepartment:$subDepartment
   })
   
   {
@@ -95,6 +112,11 @@ mutation updateDepartment (
           deletedAt
           id
           gradeName
+        }
+        subDepartment{
+          deletedAt
+          id
+          subDepartmentName
         }
       }
     
