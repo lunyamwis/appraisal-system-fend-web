@@ -1,263 +1,262 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import {
-    Grid,
-    Container,
-    Header,
-    Tab,
-    Form,
-    Message,
-} from 'semantic-ui-react';
-import gql from 'graphql-tag';
-import { useMutation }from '@apollo/react-hooks';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Grid, Container, Header, Tab, Form, Message } from "semantic-ui-react";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
 
-import '../root.scss';
+import "../root.scss";
 
 function Register(props) {
-    const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
 
-        const [values, setValues] = useState({
-            adminUsername: "",
-            adminPassword:"",
-            adminEmail:"",
-            adminFirstName:"",
-            adminLastName:"",
-            adminPhoneNumber:"",
-            username: "",
-            password:"",
-            email:"",
-            firstName:"",
-            lastName:"",
-            phoneNumber:"",
+  const [values, setValues] = useState({
+    adminUsername: "",
+    adminPassword: "",
+    adminEmail: "",
+    adminFirstName: "",
+    adminLastName: "",
+    adminPhoneNumber: "",
+    username: "",
+    password: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+  });
 
-
-         })
-
-        const [addUser, { loading }] = useMutation(REGISTER_USER, {
-            update(_, result){
-                console.log(result);
-                props.history.push("/");
-            },
-            onError(err){
-                // console.log("on error", err.networkError.result.errors.toString());
-                try {
-
-                    // setErrors(err.networkError.result.errors[0]);
-                if (err.networkError !== null && err.networkError !== 'undefined') {
-
-                    setErrors(err.networkError.result.errors[0]);
-
-                } else if (err.graphQLErrors !== null && err.networkError !== 'undefined') {
-
-                    setErrors(err.graphQLErrors.result.errors[0]);
-
-                }
-                } catch (e) {
-                    setErrors(err);
-                }
-
-            },
-            variables: values
-        });
-
-        const onChange = (event) => {
-            setValues({...values, [event.target.name]: event.target.value});
+  const [addUser, { loading }] = useMutation(REGISTER_USER, {
+    update(_, result) {
+      console.log(result);
+      props.history.push("/");
+    },
+    onError(err) {
+      // console.log("on error", err.networkError.result.errors.toString());
+      try {
+        // setErrors(err.networkError.result.errors[0]);
+        if (err.networkError !== null && err.networkError !== "undefined") {
+          setErrors(err.networkError.result.errors[0]);
+        } else if (
+          err.graphQLErrors !== null &&
+          err.networkError !== "undefined"
+        ) {
+          setErrors(err.graphQLErrors.result.errors[0]);
         }
+      } catch (e) {
+        setErrors(err);
+      }
+    },
+    variables: values,
+  });
 
-        const [visible, setVisible] = useState(false);
+  const onChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
 
-        const handleDismiss = () => {
-            setVisible(false)
-        }
+  const [visible, setVisible] = useState(false);
 
-        const onSubmit = (event) => {
-            event.preventDefault();
-            errors.message= "";
-            setVisible(true);
-            addUser();
-        }
+  const handleDismiss = () => {
+    setVisible(false);
+  };
 
-        const panes = [
-            {
-              menuItem: 'Admin Registration',
-            render: () =>
-            <Form className='clear-top' noValidate>
-            <p as='h4' className="float-left">Personal Information</p>
-            <Form.Group widths='equal'>
-                <Form.Input
-                    fluid label='Name'
-                    placeholder='Username'
-                    name='adminUsername'
-                    value={values.adminUsername}
-                    onChange={onChange}
-                    />
+  const onSubmit = (event) => {
+    event.preventDefault();
+    errors.message = "";
+    setVisible(true);
+    addUser();
+  };
 
-                <Form.Input
-                    fluid label='First name'
-                    placeholder='First name'
-                    name='adminFirstName'
-                    value={values.adminFirstName}
-                    onChange={onChange}
-                    />
+  const panes = [
+    {
+      menuItem: "Admin Registration",
+      render: () => (
+        <Form className="clear-top" noValidate>
+          <p as="h4" className="float-left">
+            Personal Information
+          </p>
+          <Form.Group widths="equal">
+            <Form.Input
+              fluid
+              label="Name"
+              placeholder="Username"
+              name="adminUsername"
+              value={values.adminUsername}
+              onChange={onChange}
+            />
 
-                <Form.Input
-                    fluid label='Last name'
-                    placeholder='Last name'
-                    name='adminLastName'
-                    value={values.adminLastName}
-                    onChange={onChange}
-                    />
-            </Form.Group>
+            <Form.Input
+              fluid
+              label="First name"
+              placeholder="First name"
+              name="adminFirstName"
+              value={values.adminFirstName}
+              onChange={onChange}
+            />
 
-            <Form.Group widths='equal'>
-                <Form.Input
-                    fluid label='Password'
-                    placeholder='Password'
-                    name='adminPassword'
-                    value={values.adminPassword}
-                    onChange={onChange}
-                    type='password'
-                    />
+            <Form.Input
+              fluid
+              label="Last name"
+              placeholder="Last name"
+              name="adminLastName"
+              value={values.adminLastName}
+              onChange={onChange}
+            />
+          </Form.Group>
 
-                <Form.Input
-                    fluid label='Email'
-                    placeholder='Email Address'
-                    name='adminEmail'
-                    value={values.adminEmail}
-                    onChange={onChange}
-                    />
+          <Form.Group widths="equal">
+            <Form.Input
+              fluid
+              label="Password"
+              placeholder="Password"
+              name="adminPassword"
+              value={values.adminPassword}
+              onChange={onChange}
+              type="password"
+            />
 
-                <Form.Input
-                    fluid label='Phone Number'
-                    placeholder='Phone number'
-                    name='adminPhoneNumber'
-                    value={values.adminPhoneNumber}
-                    onChange={onChange}
-                    />
-            </Form.Group>
+            <Form.Input
+              fluid
+              label="Email"
+              placeholder="Email Address"
+              name="adminEmail"
+              value={values.adminEmail}
+              onChange={onChange}
+            />
 
+            <Form.Input
+              fluid
+              label="Phone Number"
+              placeholder="Phone number"
+              name="adminPhoneNumber"
+              value={values.adminPhoneNumber}
+              onChange={onChange}
+            />
+          </Form.Group>
 
-        <Form.Checkbox label='I agree to the Terms and Conditions' />
-        <Form.Button secondary>Register Admin</Form.Button>
-        </Form>,
-            },
-            {
-              menuItem: 'Staff Registration',
-              render: () =>
+          <Form.Checkbox label="I agree to the Terms and Conditions" />
+          <Form.Button secondary>Register Admin</Form.Button>
+        </Form>
+      ),
+    },
+    {
+      menuItem: "Staff Registration",
+      render: () => (
+        <Form
+          onSubmit={onSubmit}
+          noValidate
+          className={loading ? "loading" : ""}
+        >
+          <p as="h4" className="float-left">
+            Personal Information
+          </p>
+          <Form.Group widths="equal">
+            <Form.Input
+              fluid
+              label="Username"
+              placeholder="Username"
+              name="username"
+              value={values.username}
+              onChange={onChange}
+              id="username"
+              errors={errors.username ? true : undefined}
+            />
 
-              <Form onSubmit={onSubmit} noValidate className={loading ? "loading":''}>
+            <Form.Input
+              fluid
+              label="First name"
+              placeholder="First name"
+              name="firstName"
+              value={values.firstName}
+              onChange={onChange}
+              errors={errors.firstName ? true : undefined}
+            />
 
+            <Form.Input
+              fluid
+              label="Last name"
+              placeholder="Last name"
+              name="lastName"
+              value={values.lastName}
+              onChange={onChange}
+              errors={errors.lastName ? true : undefined}
+            />
+          </Form.Group>
 
-                <p as='h4' className="float-left">Personal Information</p>
-                <Form.Group widths='equal'>
+          <Form.Group widths="equal">
+            <Form.Input
+              fluid
+              label="Password"
+              placeholder="Password"
+              name="password"
+              value={values.password}
+              onChange={onChange}
+              errors={errors.password ? true : undefined}
+              type="password"
+            />
 
-                                <Form.Input
-                    fluid label='Username'
-                    placeholder='Username'
-                    name='username'
-                    value={values.username}
-                    onChange={onChange}
-                    id="username"
-                    errors={errors.username ? true : undefined}
-                    />
+            <Form.Input
+              fluid
+              label="Email"
+              placeholder="Email Address"
+              name="email"
+              value={values.email}
+              onChange={onChange}
+              errors={errors.email ? true : undefined}
+            />
 
-                <Form.Input
-                    fluid label='First name'
-                    placeholder='First name'
-                    name='firstName'
-                    value={values.firstName}
-                    onChange={onChange}
-                    errors={errors.firstName ? true : undefined}
+            <Form.Input
+              fluid
+              label="Phone Number"
+              placeholder="Phone number"
+              name="phoneNumber"
+              value={values.phoneNumber}
+              onChange={onChange}
+              errors={errors.phoneNumber ? true : undefined}
+            />
+          </Form.Group>
 
-                    />
+          <Form.Checkbox label="I agree to the Terms and Conditions" />
+          <Form.Button secondary>Register Staff</Form.Button>
+        </Form>
+      ),
+    },
+  ];
 
-                <Form.Input
-                    fluid label='Last name'
-                    placeholder='Last name'
-                    name='lastName'
-                    value={values.lastName}
-                    onChange={onChange}
-                    errors={errors.lastName ? true : undefined}
+  return (
+    <div className=".app-container">
+      <Container>
+        <Grid padded>
+          <Grid.Row>
+            <Grid.Column>
+              <Header as="h1">Sign Up</Header>
+              <div className="center">
+                Already got an account?
+                <Link to="/"> Sign In Here</Link>
+              </div>
 
-                    />
-            </Form.Group>
+              <Tab
+                className="clear-top"
+                menu={{ secondary: true, pointing: true }}
+                panes={panes}
+              />
+              {console.log(JSON.stringify(errors, null, 2))}
+              {console.log("msg", errors.message)}
 
-            <Form.Group widths='equal'>
-                <Form.Input
-                    fluid label='Password'
-                    placeholder='Password'
-                    name='password'
-                    value={values.password}
-                    onChange={onChange}
-                    errors={errors.password ? true : undefined}
-                    type='password'
-
-                    />
-
-                <Form.Input
-                    fluid label='Email'
-                    placeholder='Email Address'
-                    name='email'
-                    value={values.email}
-                    onChange={onChange}
-                    errors={errors.email ? true : undefined}
-
-                    />
-
-                <Form.Input
-                    fluid label='Phone Number'
-                    placeholder='Phone number'
-                    name='phoneNumber'
-                    value={values.phoneNumber}
-                    onChange={onChange}
-                    errors={errors.phoneNumber ? true : undefined}
-
-                    />
-
-                                </Form.Group>
-
-                            <Form.Checkbox label='I agree to the Terms and Conditions' />
-                            <Form.Button secondary>Register Staff</Form.Button>
-                            </Form>
-            },
-          ];
-
-
-
-        return (
-            <div className='.app-container'>
-            <Container>
-                <Grid padded>
-                    <Grid.Row>
-                        <Grid.Column>
-                        <Header as='h1'>Sign Up</Header>
-                        <div className='center'>
-                            Already got an account?
-                            <Link to="/"> Sign In Here</Link>
-                        </div>
-
-                        <Tab className='clear-top' menu={{ secondary: true, pointing: true }} panes={panes} />
-                        {console.log(JSON.stringify(errors, null, 2))}
-                        {console.log("msg",errors.message)}
-
-                            { visible ?
-                                <Message
-                                onDismiss={handleDismiss}
-                                header='System Response'
-                                content={ errors ? errors.message : '' }
-                                />
-                                :
-                                ''
-
-                            }
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-            </Container>
-            </div>
-        );
-    }
-
+              {visible ? (
+                <Message
+                  onDismiss={handleDismiss}
+                  header="System Response"
+                  content={errors ? errors.message : ""}
+                />
+              ) : (
+                ""
+              )}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
+    </div>
+  );
+}
 
 // const REGISTER_USER = gql`
 //     mutation register(
@@ -310,17 +309,19 @@ function Register(props) {
 
 // `;
 
-const REGISTER_USER =  gql`
-mutation createUser {
-    createUser(input:{
-      username: "Humphrys M"
-      password:"String@123"
-      email:"humphreymusonye@gmail.com"
-      firstName:"Humphrey"
-      lastName:"Musonye"
-      phoneNumber:"+254727737445"
-     image:"https://res.cloudinary.com/dsw3onksq/image/upload/v1592728825/user_x89zcm.png"
-    }){
+const REGISTER_USER = gql`
+  mutation createUser {
+    createUser(
+      input: {
+        username: "Humphrys M"
+        password: "String@123"
+        email: "humphreymusonye@gmail.com"
+        firstName: "Humphrey"
+        lastName: "Musonye"
+        phoneNumber: "+254727737445"
+        image: "https://res.cloudinary.com/dsw3onksq/image/upload/v1592728825/user_x89zcm.png"
+      }
+    ) {
       status
       user {
         id
@@ -333,15 +334,14 @@ mutation createUser {
         image
         phoneNumber
         roles
-        agency{
+        agency {
           id
           name
           agencyEmail
         }
-
       }
     }
   }
-`
+`;
 
 export default Register;
