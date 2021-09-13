@@ -4,11 +4,13 @@ export const CREATE_DEPARTMENT = gql`
 mutation createDepartment(
   $departmentName:String
   $payGrade:String
+  $subDepartments:[SubDepartmentInput]
 ){
   createDepartment(input:{
       
     departmentName:$departmentName
     payGrade:$payGrade
+    subDepartments:$subDepartments
   })
   
   {
@@ -23,7 +25,13 @@ mutation createDepartment(
           id
           gradeName
         }
+        subDepartments{
+          deletedAt
+          id
+          name
+        }
       }
+      
     
   }
 
@@ -52,6 +60,11 @@ query getDepartments ($search:String, $page:Int, $limit:Int){
       payGrade{
         gradeName
       }
+      subDepartments{
+        deletedAt
+        id
+        name
+      }
   }}}
 `
 
@@ -67,20 +80,29 @@ query getDepartment ($id:String){
       id
       gradeName
     }
+    subDepartments{
+      deletedAt
+      id
+      name
+    }
   
-}}`
+}}
+`
 
 export const UPDATE_DEPARTMENT=gql`
 mutation updateDepartment (
   $id:String!
   $departmentName:String
   $payGrade:String
+  $subDepartments:[SubDepartmentInput]
 ){
   updateDepartment(
     id:$id
     input:{
       departmentName:$departmentName
       payGrade:$payGrade
+      subDepartments:$subDepartments
+      
   })
   
   {
@@ -96,6 +118,11 @@ mutation updateDepartment (
           id
           gradeName
         }
+        subDepartments{
+          deletedAt
+          id
+          name
+        }
       }
     
   }
@@ -107,6 +134,34 @@ mutation updateDepartment (
 export const DELETE_DEPARTMENT=gql`
 mutation deleteDepartment($id:[String]!) {
   deleteDepartment(id:$id){
+    status
+    message
+  }}
+`
+
+export const UPDATE_SUB_DEPARTMENT=gql`
+mutation updateSubDepartment (
+  $id:String!
+  $name:String
+){
+updateSubDepartment(
+  id:$id
+  input:{
+      name: $name
+    }){
+  status
+  message
+  subDepartments{
+      id
+      name
+    }
+
+  }}
+`
+
+export const DELETE_SUB_DEPARTMENT=gql`
+mutation deleteSubDepartment($id:[String]!) {
+  deleteSubDepartment(id:$id){
     status
     message
   }}

@@ -4,6 +4,7 @@ export const CREATE_EMPLOYEE = gql`
 mutation createEmployee(
     $status:String
     $gender:String
+    $employeeNumber:String
     $firstName:String
     $lastName:String
     $otherNames:String
@@ -28,6 +29,7 @@ mutation createEmployee(
 createEmployee(input:{
     status:$status
     gender:$gender
+    employeeNumber:$employeeNumber
     firstName:$firstName
     lastName:$lastName
     otherNames:$otherNames
@@ -89,6 +91,7 @@ query getEmployees ($search:String, $page:Int, $limit:Int){
         deletedAt
         status
         gender
+        employeeNumber
         firstName
         lastName
         otherNames
@@ -127,6 +130,7 @@ query getEmployee ($id:String){
         deletedAt
         status
         gender
+        employeeNumber
         period
         perPeriod
         firstName
@@ -176,30 +180,32 @@ mutation updateEmployee(
     $gender:String
     $firstName:String
     $lastName:String
+    $employeeNumber:String
     $otherNames:String
     $email:String
     $address:String
     $phoneNumbers:String
     $emergencyNumbers:String
     $dateOfBirth:Date
-    $jobTitle:[TitleInput]
-    $employerName:[EmployerInput]
-    $department:[DepartmentInput]
+    $jobTitle:String
+    $employerName:String
+    $department:[String]
     $hiringDate:Date
     $currentSalary:Float
     $startingSalary:Float
     $qualifications:String
-    $completedCourses:[CourseInput]
+    $completedCourses:String
     $rateHour:Float
     $period:String
     $perPeriod:Float
-    $grade:[GradeInput]
+    $grade:String
 ) {
 updateEmployee(
     id:$id
     input:{
         status:$status
         gender:$gender
+        employeeNumber:$employeeNumber
         firstName:$firstName
         lastName:$lastName
         otherNames:$otherNames

@@ -74,6 +74,7 @@ export default function Employees() {
           <Table striped id="table-emp">
             <Table.Header>
               <Table.Row>
+                <Table.HeaderCell id="table-hd">Employee Number</Table.HeaderCell>
                 <Table.HeaderCell id="table-hd">Name</Table.HeaderCell>
                 <Table.HeaderCell id="table-hd">Job Title</Table.HeaderCell>
                 <Table.HeaderCell id="table-hd">Department</Table.HeaderCell>
@@ -86,6 +87,7 @@ export default function Employees() {
             <Table.Body>
             {employees.items && employees.items.map((employee, index)=>
               <Table.Row key={index}>
+                <Table.Cell>{employee.employeeNumber}</Table.Cell>
                 <Table.Cell>
                   <Link to={`/performancemanager/employee/${employee.id}`}>
                     {employee.firstName} - {employee.lastName}

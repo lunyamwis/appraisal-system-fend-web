@@ -11,6 +11,7 @@ import {
   Grid,
   Container,
   Segment,
+  List,
   Loader,
 } from "semantic-ui-react";
 import "../root.scss";
@@ -96,6 +97,22 @@ export default function Department({ props }) {
                   <Table.Row>
                     <Table.Cell>Pay Grade</Table.Cell>
                     <Table.Cell>{department.payGrade?department.payGrade.gradeName:null}</Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                  <Table.Cell>Sub Departments</Table.Cell>
+                  <Table.Cell>{department.subDepartments.length &&
+                      <List divided relaxed>
+                        {department.subDepartments.map((dept, key) => (
+                          <List.Item key={key}>
+                            <List.Icon name='users' size='large' verticalAlign='middle' />
+                            <List.Content>
+                              <List.Header>
+                                  <span style={{ fontSize: ".9em" }}><span className='price'>{dept.name}</span><br /></span>
+                              </List.Header>
+                              <List.Description as='a'>{dept.name}</List.Description>
+                            </List.Content>
+                          </List.Item>))}
+                      </List>}</Table.Cell>
                   </Table.Row>
                 </Table.Body>
 

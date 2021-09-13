@@ -9,6 +9,6 @@ services:
       - .:/usr/src/app/
     entrypoint: ["/bin/bash", "-c", "/usr/src/app/docker/start_app.sh"]
     ports:
-      - "8088:8088"
+      - "80:80"
     tty: true
     image: brooks-insurance-web

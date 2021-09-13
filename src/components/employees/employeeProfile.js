@@ -37,6 +37,7 @@ export default function Employee({ props }) {
     }
   }, [employeeData, employee, context]);
 
+  console.log(employee)
 
   return (
     <Container textAlign="center"
@@ -93,6 +94,10 @@ export default function Employee({ props }) {
             <Grid.Column width={9}>
               <Table striped id="profile-table">
                 <Table.Body>
+                  <Table.Row>
+                    <Table.Cell>Employee Number</Table.Cell>
+                    <Table.Cell>{employee.employeeNumber}</Table.Cell>
+                  </Table.Row>
 
                   <Table.Row>
                     <Table.Cell>First Name</Table.Cell>
@@ -135,8 +140,8 @@ export default function Employee({ props }) {
                     <Table.Cell>{employee.jobTitle ? employee.jobTitle.titleName : 'no job'}</Table.Cell>
                   </Table.Row>
                   <Table.Row>
+                    <Table.Cell>Hiring Date</Table.Cell>
                     <Table.Cell>{employee.hiringDate}</Table.Cell>
-                    <Table.Cell></Table.Cell>
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell>Employer</Table.Cell>

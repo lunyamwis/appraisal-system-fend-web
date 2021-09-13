@@ -19,6 +19,7 @@ import {
 import "../root.scss";
 import { UPDATE_GRADE, GET_GRADE, DELETE_GRADE } from "./queries";
 import { GradeContext } from "../../context/grade";
+import DeleteModal from "../modals/toDelete";
 
 
 
@@ -141,15 +142,18 @@ export default function EditGrade({ props }) {
       variables: values,
     }));
 
-
-  const removeGrade = () => {
-    if (Object.keys(values.id).length) {
-      setDeleteGradeDetails({ id: toDelete.id, deleted: false })
+    const [open, setOpen] = useState(false);
+    const removeGrade = (e) => {
+      e.preventDefault()
+      if (deleteGradeDetails.id) {
+        setOpen(false)
+        setDeleteGradeDetails({ id:gradeId, deleted: false })
+        window.location.reload(true)
+      }
     }
-  }
 
   useEffect(() => {
-    if (!deleteGradeDetails.deleted && deleteGradeDetails.id.length) {
+    if (!deleteGradeDetails.deleted && deleteGradeDetails.id) {
       deleteAGrade()
       setDeleteGradeDetails({ ...deleteGradeDetails, deleted: true, id: [] })
     }
@@ -166,9 +170,9 @@ export default function EditGrade({ props }) {
     // validate(values);
     setValues({ ...values, afterSubmit: true });
     if (!errors.errors.length) { updateGrade() }
-    removeGrade();
     setVisible(false);
   }
+
   useEffect(() => {
     if (values.done) {
       history.push({
@@ -202,9 +206,10 @@ export default function EditGrade({ props }) {
               <h3>Edit</h3>
             </Grid.Column>
             <Grid.Column width={15}>
-              <Button id={values.id}  icon floated='right' onClick={removeGrade}>
+              {/* <Button id={values.id}  icon floated='right' onClick={removeGrade}>
                 <Icon name='trash alternate' id={values.id}/>
-              </Button>
+              </Button> */}
+              <DeleteModal handleRemovalItem={removeGrade} />
             </Grid.Column>
           </Grid>
         </Header>

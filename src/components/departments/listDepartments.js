@@ -86,7 +86,7 @@ export default function Departments() {
                     {department.departmentName}
                   </Link>
                 </Table.Cell>
-                <Table.Cell>{department.payGrade}</Table.Cell>
+                <Table.Cell>{department.payGrade ?  department.payGrade.gradeName:'no department'}</Table.Cell>
               </Table.Row>)}
             </Table.Body>
           </Table>

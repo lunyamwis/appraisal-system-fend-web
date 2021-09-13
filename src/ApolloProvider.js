@@ -7,10 +7,8 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { setContext } from 'apollo-link-context';
 
 const httpLink = createHttpLink({
-  //uri: 'http://134.209.28.109:8087/api/v1/graphql/'
-  uri: 'http://127.0.0.1:8000/api/v1/graphql/'
-  //comment out the line below and comment the line above
-  //uri: 'https://c568-197-232-22-183.ngrok.io/api/v1/graphql/'
+  uri: 'http://149.28.21.2:8087/api/v1/graphql/'
+  // uri: 'http://127.0.0.1:8000/api/v1/graphql/'
 });
 
 const authLink = setContext((_, { headers }) => {

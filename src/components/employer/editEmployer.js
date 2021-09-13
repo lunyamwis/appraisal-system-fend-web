@@ -17,13 +17,15 @@ import {
   Image
 } from "semantic-ui-react";
 import "../root.scss";
-import { UPDATE_EMPLOYER, GET_EMPLOYER, DELETE_EMPLOYER } from "./queries";
+import { UPDATE_EMPLOYER, GET_EMPLOYER, DELETE_EMPLOYER, FETCH_USERS_QUERY } from "./queries";
 import { EmployerContext } from "../../context/employer";
+import UsersDropdown from "../dropdowns/listUsers";
+import DeleteModal from "../modals/toDelete";
 
 
 export default function EditEmployer({ props }) {
 
-  
+
   const employerId = props.computedMatch.params.employerId
   const [errors, setErrors] = useState({
     errorPaths: [],
@@ -37,6 +39,10 @@ export default function EditEmployer({ props }) {
   const [toDelete, setToDelete] = useState({ grade: [] });
   const [deleteEmployerDetails, setDeleteEmployerDetails] = useState({ id: [], deleted: false });
   const [visible, setVisible] = useState(false);
+  const [users, setUsers] = useState();
+  const [selectedUsers, setSelectedUsers] = useState({
+    search: "", page: 1, limit: 10
+  });
   const [search, setSearch] = useState({ search: "" });
 
   const [values, setValues] = useState({
@@ -48,12 +54,14 @@ export default function EditEmployer({ props }) {
     phoneNumbers: "",
     websiteLink: "",
     contactName: "",
-    contactPhoneNumber:"",
-    contactRole:"",
-    location:"",
-    employerDetails:""
+    contactPhoneNumber: "",
+    contactRole: "",
+    location: "",
+    employerDetails: ""
 
   });
+
+
 
   const { data: employerData } = useQuery(GET_EMPLOYER, {
     variables: { id: employerId }
@@ -142,15 +150,28 @@ export default function EditEmployer({ props }) {
       variables: values,
     }));
 
+  const { data: userData } = useQuery(FETCH_USERS_QUERY, {
+    variables: selectedUsers
+  });
+  useEffect(() => {
+    if (userData) {
+      setUsers(userData.users.items);
+    }
+  }, [userData]);
 
-  const removeEmployer = () => {
-    if (Object.keys(values.id).length) {
-      setDeleteEmployerDetails({ id: toDelete.id, deleted: false })
+  const [open, setOpen] = useState(false);
+  const removeEmployer = (e) => {
+    e.preventDefault()
+    if (deleteEmployerDetails.id) {
+      setOpen(false)
+      setDeleteEmployerDetails({ id: employerId, deleted: false })
+      window.location.reload(true)
     }
   }
 
+
   useEffect(() => {
-    if (!deleteEmployerDetails.deleted && deleteEmployerDetails.id.length) {
+    if (!deleteEmployerDetails.deleted && deleteEmployerDetails.id) {
       deleteAnEmployer()
       setDeleteEmployerDetails({ ...deleteEmployerDetails, deleted: true, id: [] })
     }
@@ -162,12 +183,21 @@ export default function EditEmployer({ props }) {
     setValues({ ...values, [event.target.name]: event.target.value, updated: true });
   }, [values])
 
+  const handleOnUserSearch = (e) => {
+    setSelectedUsers({ ...selectedUsers, search: e.target.value })
+  }
+  const handleOnUserChange = (e, { value }) => {
+    e.preventDefault()
+    const data = { employerDetails: value }
+    setValues({ ...values, ...data, updated: true });
+    // validate()
+  }
+
   function onSubmit(event) {
     event.preventDefault();
     // validate(values);
     setValues({ ...values, afterSubmit: true });
     if (!errors.errors.length) { updateEmployer() }
-    removeEmployer();
     setVisible(false);
   }
   useEffect(() => {
@@ -187,7 +217,7 @@ export default function EditEmployer({ props }) {
           <div className="content-wrapper">
             <Header as='h4'>
               <Header.Content>
-              <a href="/performancemanager">Home</a> {'>'} <a href="/performancemanager/employer-records">Employers</a> {'>'}  <Link to={`/performancemanager/employer/${employerId}`}> Employer </Link> {'>'} Edit Details
+                <a href="/performancemanager">Home</a> {'>'} <a href="/performancemanager/employer-records">Employers</a> {'>'}  <Link to={`/performancemanager/employer/${employerId}`}> Employer </Link> {'>'} Edit Details
                         <Header.Subheader>
                   Fill in this form to edit an Employer Details
                         </Header.Subheader>
@@ -203,9 +233,10 @@ export default function EditEmployer({ props }) {
               <h3>Edit</h3>
             </Grid.Column>
             <Grid.Column width={15}>
-              <Button id={values.id}  icon floated='right' onClick={removeEmployer}>
-                <Icon name='trash alternate' id={values.id}/>
-              </Button>
+              {/* <Button id={values.id} icon floated='right' onClick={removeEmployer}>
+                <Icon name='trash alternate' id={values.id} />
+              </Button> */}
+              <DeleteModal handleRemovalItem={removeEmployer}/>
             </Grid.Column>
           </Grid>
         </Header>
@@ -309,10 +340,12 @@ export default function EditEmployer({ props }) {
                   <Table.Row>
                     <Table.Cell>In House Employer Details</Table.Cell>
                     <Table.Cell>
-                      <Form.Field>
-                        <Input fluid placeholder='In House Employer Details'
-                          name="employerDetails" onChange={onChange}
-                          value={values.employerDetails} />
+                      <Form.Field error={errors.errorPaths.includes('employerDetails')}>
+                        {users && <UsersDropdown
+                          users={users}
+                          handleOnUserSearch={handleOnUserSearch}
+                          handleOnUserChange={handleOnUserChange}
+                        />}
                       </Form.Field>
                     </Table.Cell>
                   </Table.Row>

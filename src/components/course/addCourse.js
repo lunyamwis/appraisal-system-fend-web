@@ -37,14 +37,12 @@ export default function AddNewCourse({ props }) {
   const context = useContext(CourseContext);
   const [successMsg, setSuccessMsg] = useState();
   const [responseErrors, setResponseErrors] = useState([]);
-  
   const options = [
-    {
-      key: 'DO',
-      text: 'PHD',
-      value: 'DO',
-    },
-    
+    {key:"H",text:"Form Four Level",value:"H"},
+    {key:"DE",text:"Degree",value:"DE"},
+    {key:"DI",text:"Diploma",value:"DI"},
+    {key:"M",text:"Masters",value:"M"},
+    {key: 'DO',text: 'PHD',value: 'DO'}
   ]
 
   const [values, setValues] = useState({
@@ -62,10 +60,7 @@ export default function AddNewCourse({ props }) {
       setVisible(false);
       let courseData = result.data.createCourse.course
       context.createCourse(courseData);
-      history.push({
-        pathname: `/performancemanager/course/${courseData.id}`,
-        state: { course: courseData, courseId: courseData.id }
-      })
+      window.location.reload(true);
 
       setSuccessMsg('Successfully Registered New Course');
     },

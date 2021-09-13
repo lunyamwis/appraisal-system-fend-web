@@ -19,6 +19,7 @@ import {
 import "../root.scss";
 import { UPDATE_COURSE, GET_COURSE, DELETE_COURSE } from "./queries";
 import { CourseContext } from "../../context/course";
+import DeleteModal from "../modals/toDelete";
 
 
 
@@ -26,7 +27,11 @@ export default function EditCourse({ props }) {
 
 
   const options = [
-    { key: "DO", text: "PHD", value: "DO" },
+    { key: "H", text: "Form Four Level", value: "H" },
+    { key: "DE", text: "Degree", value: "DE" },
+    { key: "DI", text: "Diploma", value: "DI" },
+    { key: "M", text: "Masters", value: "M" },
+    { key: 'DO', text: 'PHD', value: 'DO' }
   ];
 
   const courseId = props.computedMatch.params.courseId
@@ -140,15 +145,18 @@ export default function EditCourse({ props }) {
       variables: values,
     }));
 
-
-  const removeCourse = () => {
-    if (Object.keys(values.id).length) {
-      setDeleteCourseDetails({ id: toDelete.id, deleted: false })
+    const [open, setOpen] = useState(false);
+    const removeCourse = (e) => {
+      e.preventDefault()
+      if (deleteCourseDetails.id) {
+        setOpen(false)
+        setDeleteCourseDetails({ id: courseId, deleted: false })
+        window.location.reload(true)
+      }
     }
-  }
 
   useEffect(() => {
-    if (!deleteCourseDetails.deleted && deleteCourseDetails.id.length) {
+    if (!deleteCourseDetails.deleted && deleteCourseDetails.id) {
       deleteACourse()
       setDeleteCourseDetails({ ...deleteCourseDetails, deleted: true, id: [] })
     }
@@ -165,7 +173,6 @@ export default function EditCourse({ props }) {
     // validate(values);
     setValues({ ...values, afterSubmit: true });
     if (Object.keys(values).length > 7 && !errors.errors.length) { updateCourse() }
-    removeCourse();
     setVisible(false);
   }
   useEffect(() => {
@@ -185,7 +192,7 @@ export default function EditCourse({ props }) {
           <div className="content-wrapper">
             <Header as='h4'>
               <Header.Content>
-              <a href="/performancemanager">Home</a> {'>'} <a href="/performancemanager/course-records">Courses</a> {'>'}  <Link to={`/performancemanager/courser/${courseId}`}> Course </Link> {'>'} Edit Details
+                <a href="/performancemanager">Home</a> {'>'} <a href="/performancemanager/course-records">Courses</a> {'>'}  <Link to={`/performancemanager/courser/${courseId}`}> Course </Link> {'>'} Edit Details
                         <Header.Subheader>
                   Fill in this form to edit an Course Details
                         </Header.Subheader>
@@ -201,9 +208,10 @@ export default function EditCourse({ props }) {
               <h3>Edit</h3>
             </Grid.Column>
             <Grid.Column width={15}>
-              <Button id={values.id}  icon floated='right' onClick={removeCourse}>
-                <Icon name='trash alternate' id={values.id}/>
-              </Button>
+              {/* <Button id={values.id} icon floated='right' onClick={removeCourse}>
+                <Icon name='trash alternate' id={values.id} />
+              </Button> */}
+              <DeleteModal handleRemovalItem={removeCourse}/>
             </Grid.Column>
           </Grid>
         </Header>
@@ -247,14 +255,21 @@ export default function EditCourse({ props }) {
                   <Table.Row>
                     <Table.Cell>Course Level</Table.Cell>
                     <Table.Cell>
-                      <Form.Field>
-                        <Input fluid placeholder='courseLevel'
-                          name="courseLevel" onChange={onChange}
-                          value={values.courseLevel} />
+                      <Form.Field error={errors.errorPaths.includes('courseLevel')}>
+
+                        <Form.Select
+                          fluid
+                          options={options}
+                          name="courseLevel"
+                          placeholder="Course Level"
+                          onChange={onChange}
+                          value={values.courseLevel}
+                          required
+                        />
                       </Form.Field>
                     </Table.Cell>
                   </Table.Row>
-                  
+
                 </Table.Body>
 
               </Table>

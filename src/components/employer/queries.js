@@ -174,3 +174,26 @@ mutation deleteEmployer ($id:[String]!){
     message
    }}
 `
+
+export const FETCH_USERS_QUERY = gql`
+  query getUsers($search:String,$page:Int, $limit:Int) {
+    users(isStaff:true, limit:$limit,page:$page, search:$search)
+    {
+      items{
+        createdAt
+        id
+        deletedAt
+        firstName
+        phoneNumber
+        lastName
+        isActive
+        email
+      }
+      page
+      count
+      pages
+      hasNext
+      hasPrev
+    }
+    }
+`;

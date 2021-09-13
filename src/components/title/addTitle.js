@@ -50,11 +50,8 @@ export default function AddNewTitle({ props }) {
       setVisible(false);
       let titleData = result.data.createTitle.title
       context.createTitle(titleData);
-      history.push({
-        pathname: `/performancemanager/title/${titleData.id}`,
-        state: { title: titleData, titleId: titleData.id }
-      })
-
+      
+      window.location.reload(true);
       setSuccessMsg('Successfully Registered A New Title');
     },
     onError(err) {

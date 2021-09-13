@@ -13,13 +13,14 @@ import {
 } from "semantic-ui-react";
 import moment from 'moment';
 import { DateInput } from 'semantic-ui-calendar-react';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import "../root.scss";
-import { CREATE_EMPLOYER } from "./queries";
+import { CREATE_EMPLOYER, FETCH_USERS_QUERY } from "./queries";
 import * as yup from 'yup';
 import PhoneInput from "react-phone-input-2";
 import { AuthContext } from "../../context/auth";
 import { EmployerContext } from '../../context/employer';
+import UsersDropdown from '../dropdowns/listUsers';
 
 
 export default function AddNewEmployer({ props }) {
@@ -36,6 +37,10 @@ export default function AddNewEmployer({ props }) {
   const context = useContext(EmployerContext);
   const [successMsg, setSuccessMsg] = useState();
   const [responseErrors, setResponseErrors] = useState([]);
+  const [users, setUsers] = useState();
+  const [selectedUsers,setSelectedUsers] = useState({
+    search: "", page: 1, limit: 10
+  });
 
   const [values, setValues] = useState({
     updated: true,
@@ -53,15 +58,22 @@ export default function AddNewEmployer({ props }) {
     location: yup.string().required("Please provide employer location"),
     employerDetails: yup.string()
   });
+  
+  const { data: userData } = useQuery(FETCH_USERS_QUERY, {
+    variables: selectedUsers
+  });
+  useEffect(() => {
+    if (userData) {
+      setUsers(userData.users.items);
+    }
+  }, [userData]);
+  
   const [createEmployer, { loading }] = useCallback(useMutation(CREATE_EMPLOYER, {
     update(_, result) {
       setVisible(false);
       let employerData = result.data.createEmployer.employer
       context.createEmployer(employerData);
-      history.push({
-        pathname: `/performancemanager/employer/${employerData.id}`,
-        state: { employer: employerData, employerId: employerData.id }
-      })
+      window.location.reload(true)
 
       setSuccessMsg('Successfully Registered A New Employer');
     },
@@ -110,6 +122,16 @@ export default function AddNewEmployer({ props }) {
   const onChange = useCallback((event, { name, value }) => {
     setValues({ ...values, [name]: value, updated: true });
   }, [values])
+
+  const handleOnUserSearch = (e) => {
+    setSelectedUsers({ ...selectedUsers, search: e.target.value })
+  }
+  const handleOnUserChange = (e, { value }) => {
+    e.preventDefault()
+    const data = { employerDetails: value }
+    setValues({ ...values, ...data, updated: true });
+    // validate()
+  }
 
   const handleDismiss = () => {
     setVisible(false);
@@ -259,15 +281,14 @@ export default function AddNewEmployer({ props }) {
               </Form.Field>
 
               <Form.Field error={errors.errorPaths.includes('employerDetails')}>
-
-                <Form.Input
-                  fluid
-                  label={<h5>In House Employer</h5>}
-                  placeholder="In House Employer"
-                  name="employerDetails"
-                  onChange={onChange}
-                />
+                <label>In House Employer</label>
+                {users && <UsersDropdown
+                  users={users}
+                  handleOnUserSearch={handleOnUserSearch}
+                  handleOnUserChange={handleOnUserChange}
+                />}
               </Form.Field>
+
 
             </Form.Group>
 

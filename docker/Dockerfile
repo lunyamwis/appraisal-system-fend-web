@@ -26,7 +26,7 @@ RUN apk update && apk add bash
 COPY . .
 
 
-EXPOSE 8088
+EXPOSE 80
 CMD ["/bin/bash", "-c", "/usr/src/app/docker/start_app.sh"]
 
 # FROM nginx

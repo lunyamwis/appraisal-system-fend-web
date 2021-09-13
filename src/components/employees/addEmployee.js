@@ -22,8 +22,19 @@ import PhoneInput from "react-phone-input-2";
 import { AuthContext } from "../../context/auth";
 import { GET_DEPARTMENTS } from '../departments/queries';
 import DepartmentDropdown from '../dropdowns/listDepartments';
-
-
+import { GET_GRADES } from '../grade/queries';
+import GradeDropdown from '../dropdowns/listGrades';
+import { GET_COURSES } from '../course/queries';
+import CoursesDropdown from '../dropdowns/listCourses';
+import { GET_TITLES } from '../title/queries';
+import TitlesDropdown from '../dropdowns/listJobTitles';
+import { GET_EMPLOYERS } from '../employer/queries';
+import EmployersDropdown from '../dropdowns/listManagers';
+import DepartmentModal from '../modals/departmentModal';
+import TitleModal from '../modals/titleModal';
+import ManagerModal from '../modals/managerModal';
+import CourseModal from '../modals/coursesModal';
+import GradeModal from '../modals/gradeModal';
 
 export default function AddNewEmployee({ props }) {
 
@@ -39,30 +50,49 @@ export default function AddNewEmployee({ props }) {
   const context = useContext(EmployeePolicyContext);
   const [successMsg, setSuccessMsg] = useState();
   const [search, setSearch] = useState({ search: "" });
-  const [departments, setDepartments] = useState();
+  const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState({
     search: "", page: 1, limit: 10
   });
-  const [responseErrors, setResponseErrors] = useState([]);
-  const status = [
-    {
-      key: 'F',
-      text: 'Full Time',
-      value: 'F'
-    }
 
-  ]
+  const [grades, setGrades] = useState();
+  const [selectedGrades, setSelectedGrades] = useState({
+    search: "", page: 1, limit: 10
+  });
+
+  const [courses, setCourses] = useState();
+  const [selectedCourses, setSelectedCourses] = useState({
+    search: "", page: 1, limit: 10
+  });
+
+  const [titles, setTitles] = useState();
+  const [selectedTitles, setSelectedTitles] = useState({
+    search: "", page: 1, limit: 10
+  });
+
+  const [employers, setEmployers] = useState();
+  const [selectedEmployers, setSelectedEmployers] = useState({
+    search: "", page: 1, limit: 10
+  });
+
+  const [responseErrors, setResponseErrors] = useState([]);
+  const typeOptions = [
+    { key: "F", text: "Full-Time", value: "F" },
+    { key: "P", text: "Part-Time", value: "P" },
+    { key: "C", text: "Contract", value: "C" },
+    { key: "L", text: "Laid Off", value: "L" },
+  ];
+
   const options = [
-    {
-      key: 'F',
-      text: 'Female',
-      value: 'F',
-    },
-    {
-      key: 'M',
-      text: 'Male',
-      value: 'M',
-    }
+    { key: "M", text: "Male", value: "M" },
+    { key: "F", text: "Female", value: "F" },
+  ];
+
+  const timeOptions = [
+    {key:"D",text:"Daily",value:"D"},
+    {key:"W",text:"Weekly",value:"W"},
+    {key:"M",text:"Monthly",value:"M"},
+    {key:"Y",text:"Yearly",value:"Y"}
   ]
 
   const [values, setValues] = useState({
@@ -75,6 +105,7 @@ export default function AddNewEmployee({ props }) {
     status: yup.string().required("Please indicate status of client"),
     gender: yup.string().required("Please indicate gender"),
     firstName: yup.string().required("Please provide the first name"),
+    employeeNumber:yup.string().required("Please enter the employee number"),
     lastName: yup.string().required("Please provide the last name"),
     otherNames: yup.string().required("Please provide other names"),
     email: yup.string(),
@@ -93,7 +124,7 @@ export default function AddNewEmployee({ props }) {
     rateHour: yup.number(),
     period: yup.string(),
     perPeriod: yup.number(),
-    grade: yup.string(),
+    grade: yup.string().required("Please select the pay grade that this employee belongs to"),
   });
 
   const { data: departmentData } = useQuery(GET_DEPARTMENTS, {
@@ -105,17 +136,49 @@ export default function AddNewEmployee({ props }) {
     }
   }, [departmentData]);
 
-  console.log(departments)
+  const { data: gradeData } = useQuery(GET_GRADES, {
+    variables: selectedGrades
+  });
+  useEffect(() => {
+    if (gradeData) {
+      setGrades(gradeData.grades.items);
+    }
+  }, [gradeData]);
+
+  const { data: courseData } = useQuery(GET_COURSES, {
+    variables: selectedCourses
+  });
+  useEffect(() => {
+    if (courseData) {
+      setCourses(courseData.courses.items);
+    }
+  }, [courseData]);
+  
+  const { data: titleData } = useQuery(GET_TITLES, {
+    variables: selectedTitles
+  });
+  useEffect(() => {
+    if (titleData) {
+      setTitles(titleData.titles.items);
+    }
+  }, [titleData]);
+
+  const { data: employerData } = useQuery(GET_EMPLOYERS, {
+    variables: selectedEmployers
+  });
+  useEffect(() => {
+    if (employerData) {
+      setEmployers(employerData.employers.items);
+    }
+  }, [employerData]);
+
 
   const [addEmployee, { loading }] = useCallback(useMutation(CREATE_EMPLOYEE, {
     update(_, result) {
       setVisible(false);
       let employeeData = result.data.createEmployee.employee
       context.createEmployee(employeeData);
-      history.push({
-        pathname: `/performancemanager/employee/${employeeData.id}`,
-        state: { employee: employeeData, employeeId: employeeData.id }
-      })
+      window.location.reload(true)
 
       setSuccessMsg('Successfully Registered New Employee');
     },
@@ -183,6 +246,49 @@ export default function AddNewEmployee({ props }) {
     // validate()
   }
 
+  const handleOnGradeSearch = (e) => {
+    setSelectedGrades({ ...selectedGrades, search: e.target.value })
+  }
+  const handleOnGradeChange = (e, { value }) => {
+    e.preventDefault()
+    const data = { grades: value }
+    setValues({ ...values, ...data, updated: true });
+    // validate()
+  }
+
+  const handleOnTitleSearch = (e) => {
+    setSelectedTitles({ ...selectedTitles, search: e.target.value })
+  }
+  const handleOnTitleChange = (e, { value }) => {
+    e.preventDefault()
+    const data = { jobTitle: value }
+    setValues({ ...values, ...data, updated: true });
+    // validate()
+  }
+
+  const handleOnEmployerSearch = (e) => {
+    setSelectedEmployers({ ...selectedEmployers, search: e.target.value })
+  }
+  const handleOnEmployerChange = (e, { value }) => {
+    e.preventDefault()
+    const data = { employerName: value }
+    setValues({ ...values, ...data, updated: true });
+    // validate()
+  }
+
+  const handleOnCourseSearch = (e) => {
+    setSelectedCourses({ ...selectedCourses, search: e.target.value })
+  }
+  const handleOnCourseChange = (e, { value }) => {
+    e.preventDefault()
+    const data = { courses: value }
+    setValues({ ...values, ...data, updated: true });
+    // validate()
+  }
+
+  const handleAddDepartments = useCallback((e) => {
+    e.preventDefault()
+  })
 
 
   const handleDismiss = () => {
@@ -241,10 +347,19 @@ export default function AddNewEmployee({ props }) {
               <h3>Personal Information</h3>
             </Header>
             <Form.Group widths="equal">
-              <Form.Field required error={errors.errorPaths.includes('firstName')}>
+            <Form.Field required error={errors.errorPaths.includes('employeeNumber')}>
+                <label>Employee Number</label>
                 <Form.Input
                   fluid
-                  label={<h5>First name</h5>}
+                  placeholder="Employee Number"
+                  name="employeeNumber"
+                  onChange={onChange}
+                />
+              </Form.Field>
+              <Form.Field required error={errors.errorPaths.includes('firstName')}>
+                <label>First Name</label>
+                <Form.Input
+                  fluid
                   placeholder="First name"
                   name="firstName"
                   onChange={onChange}
@@ -252,9 +367,9 @@ export default function AddNewEmployee({ props }) {
               </Form.Field>
 
               <Form.Field required error={errors.errorPaths.includes('lastName')}>
+                <label>Last Name</label>
                 <Form.Input
                   fluid
-                  label={<h5>Last name</h5>}
                   placeholder="Last name"
                   name="lastName"
                   onChange={onChange}
@@ -262,9 +377,9 @@ export default function AddNewEmployee({ props }) {
               </Form.Field>
 
               <Form.Field required error={errors.errorPaths.includes('otherNames')}>
+                <label>Other Names</label>
                 <Form.Input
                   fluid
-                  label={<h5>Other name</h5>}
                   placeholder="Other name"
                   name="otherNames"
                   onChange={onChange}
@@ -275,10 +390,9 @@ export default function AddNewEmployee({ props }) {
 
             <Form.Group widths="equal">
               <Form.Field error={errors.errorPaths.includes('gender')}>
-
+                <label>Gender</label>
                 <Form.Select
                   fluid
-                  label={<h5>Gender</h5>}
                   options={options}
                   name="gender"
                   placeholder="Gender"
@@ -306,10 +420,9 @@ export default function AddNewEmployee({ props }) {
             </Form.Group>
             <Form.Group widths="equal">
               <Form.Field required error={errors.errorPaths.includes('email')}>
-
+                <label>Email Address</label>
                 <Form.Input
                   fluid
-                  label={<h5>Email address</h5>}
                   placeholder="Email address"
                   name="email"
                   type="email"
@@ -319,10 +432,9 @@ export default function AddNewEmployee({ props }) {
               </Form.Field>
 
               <Form.Field error={errors.errorPaths.includes('address')}>
-
+                <label>Address</label>
                 <Form.Input
                   fluid
-                  label={<h5>Address</h5>}
                   placeholder="Address"
                   name="address"
                   onChange={onChange}
@@ -376,13 +488,44 @@ export default function AddNewEmployee({ props }) {
               <h3>Job Details</h3>
             </Header>
             <Form.Group widths="equal">
-              <Form.Input
-                fluid
-                label={<h5>Job title</h5>}
-                placeholder="Job Title"
-                name="jobtitle"
-                required
-              />
+            <Form.Field error={errors.errorPaths.includes('period')}>
+                  <label>Period</label>
+                  <Form.Select
+                    fluid
+                    placeholder="Period"
+                    name="period"
+                    selection
+                    options={timeOptions}
+                    onChange={onChange}
+
+                  />
+                </Form.Field>
+              <Form.Field error={errors.errorPaths.includes('perPeriod')}>
+                <label>Per Period</label>
+                <Form.Input
+                  fluid
+                  placeholder="Per_period"
+                  name="per_period"
+                  type="number"
+                  onChange={onChange}
+                  required
+                />
+              </Form.Field>
+
+              <Form.Field error={errors.errorPaths.includes('rateHour')}>
+                <label>Hourly Rate</label>
+                <Form.Input
+                  fluid
+                  placeholder="rate per hour"
+                  name="rateperhour"
+                  type="number"
+                  onChange={onChange}
+                />
+              </Form.Field>
+            </Form.Group>
+
+            <Form.Group widths="equal">
+              
               <Form.Field required error={errors.errorPaths.includes('hiringDate')}>
                 <label>Date Of Hire</label>
 
@@ -398,136 +541,114 @@ export default function AddNewEmployee({ props }) {
                   onChange={onChange}
                 />
               </Form.Field>
+              <Form.Field error={errors.errorPaths.includes('jobTitle')}>
+                <label>Job Title</label>
+                {titles && <TitlesDropdown
+                  titles={titles}
+                  handleOnTitleSearch={handleOnTitleSearch}
+                  handleOnTitleChange={handleOnTitleChange}
+                />}
+              </Form.Field>
+              <TitleModal/>
             </Form.Group>
             <Form.Group widths="equal">
-              <Form.Input
-                fluid
-                label={<h5>Manager</h5>}
-                placeholder="Manager"
-                name="manager"
-                required
-              />
-
+            <Form.Field error={errors.errorPaths.includes('currentSalary')}>
+                  <label>Current Salary</label>
+                  <Form.Input
+                    fluid
+                    placeholder="Current salary"
+                    name="currentSalary"
+                    type="number"
+                    step="1"
+                    onChange={onChange}
+                  />
+                </Form.Field>
               <Form.Field error={errors.errorPaths.includes('department')}>
                 <label>Department</label>
                 {departments && <DepartmentDropdown
                   departments={departments}
                   handleOnDepartmentSearch={handleOnDepartmentSearch}
                   handleOnDepartmentChange={handleOnDepartmentChange}
+
                 />}
               </Form.Field>
-            </Form.Group>
-            <Form.Group widths="equal">
-              <Form.Field error={errors.errorPaths.includes('currentSalary')}>
+              <DepartmentModal/>  
+              </Form.Group>
+              <Form.Group widths="equal">
+                
 
-                <Form.Input
-                  fluid
-                  label={<h5>Current salary</h5>}
-                  placeholder="Current salary"
-                  name="currentSalary"
-                  type="number"
-                  step="1"
-                  onChange={onChange}
-                />
+                <Form.Field error={errors.errorPaths.includes('startingSalary')}>
+                  <label>Starting Salary</label>
+                  <Form.Input
+                    fluid
+                    placeholder="Starting salary"
+                    name="startingSalary"
+                    type="number"
+                    step="1"
+                    onChange={onChange}
+                  />
+                </Form.Field>
+                <Form.Field error={errors.errorPaths.includes('employerName')}>
+                <label>Managers</label>
+                {employers && <EmployersDropdown
+                  employers={employers}
+                  handleOnEmployerSearch={handleOnEmployerSearch}
+                  handleOnEmployerChange={handleOnEmployerChange}
+                />}
               </Form.Field>
+              <ManagerModal/>
+              </Form.Group>
 
-              <Form.Field error={errors.errorPaths.includes('startingSalary')}>
 
-                <Form.Input
-                  fluid
-                  label={<h5>Starting salary</h5>}
-                  placeholder="Starting salary"
-                  name="startingSalary"
-                  type="number"
-                  step="1"
-                  onChange={onChange}
-                />
-              </Form.Field>
-            </Form.Group>
-            <Form.Group widths="equal">
-              <Form.Field error={errors.errorPaths.includes('period')}>
-                <Form.Input
-                  fluid
-                  label={<h5>Period</h5>}
-                  placeholder="Period"
-                  name="period"
-                  type="text"
-                  onChange={onChange}
-                />
-              </Form.Field>
-              <Form.Field error={errors.errorPaths.includes('perPeriod')}>
+              <Form.Group widths="equal">
+                <Form.Field error={errors.errorPaths.includes('status')}>
+                  <label>Status</label>
+                  <Form.Select
+                    fluid
+                    placeholder="Employee status"
+                    name="status"
+                    selection
+                    options={typeOptions}
+                    onChange={onChange}
 
-                <Form.Input
-                  fluid
-                  label={<h5>Per_period</h5>}
-                  placeholder="Per_period"
-                  name="per_period"
-                  type="number"
-                  onChange={onChange}
-                  required
-                />
-              </Form.Field>
+                  />
+                </Form.Field>
+                <Form.Field error={errors.errorPaths.includes('course')}>
+                  <label>Courses</label>
+                  {courses && <CoursesDropdown
+                    courses={courses}
+                    handleOnCourseSearch={handleOnCourseSearch}
+                    handleOnCourseChange={handleOnCourseChange}
+                  />}
+                </Form.Field>
+                <CourseModal/>
+              </Form.Group>
 
-              <Form.Field error={errors.errorPaths.includes('rateHour')}>
-
-                <Form.Input
-                  fluid
-                  label={<h5>Rate per hour</h5>}
-                  placeholder="rate per hour"
-                  name="rateperhour"
-                  type="number"
-                  onChange={onChange}
-                />
-              </Form.Field>
-            </Form.Group>
-
-            <Form.Group widths="equal">
-              <Form.Field error={errors.errorPaths.includes('status')}>
-
-                <Form.Select
-                  fluid
-                  label={<h5>Employee status</h5>}
-                  placeholder="Employee status"
-                  name="status"
-                  selection
-                  options={status}
-                  onChange={onChange}
-
-                />
-              </Form.Field>
+              <Form.Group widths="equal">
               <Form.Field error={errors.errorPaths.includes('qualifications')}>
-
-                <Form.Input
-                  fluid
-                  label={<h5>Qualifications</h5>}
-                  placeholder="Qualifications"
-                  name="qualifications"
-                  onChange={onChange}
-                />
-              </Form.Field>
-            </Form.Group>
-
-            <Form.Group widths="equal">
-              <Form.Input
-                fluid
-                label={<h5>Completed courses</h5>}
-                placeholder="Completed courses"
-                name="completedcourses"
-                required
-              />
-              <Form.Input
-                fluid
-                label={<h5>Employee grade</h5>}
-                placeholder="Employee grade"
-                name="employeegrade"
-                required
-              />
-            </Form.Group>
-            <Button
-              type="submit"
-              color="teal"
-            >
-              Submit
+                  <label>Qualifications</label>
+                  <Form.Input
+                    fluid
+                    placeholder="Qualifications"
+                    name="qualifications"
+                    onChange={onChange}
+                  />
+                </Form.Field>
+                <Form.Field error={errors.errorPaths.includes('grade')}>
+                  <label>Grade</label>
+                  {grades && <GradeDropdown
+                    grades={grades}
+                    handleOnGradeSearch={handleOnGradeSearch}
+                    handleOnGradeChange={handleOnGradeChange}
+                  />}
+                </Form.Field>
+                <GradeModal/>
+              </Form.Group>
+              <Button
+                type="submit"
+                color="teal"
+              >
+                Submit
               </Button>
           </Form>
         </Segment>

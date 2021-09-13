@@ -19,6 +19,7 @@ import {
 import "../root.scss";
 import { UPDATE_TITLE, GET_TITLE, DELETE_TITLE } from "./queries";
 import { TitleContext } from "../../context/title";
+import DeleteModal from "../modals/toDelete";
 
 
 export default function EditTitle({ props }) {
@@ -135,15 +136,20 @@ export default function EditTitle({ props }) {
       variables: values,
     }));
 
-
-  const removeTitle = () => {
-    if (Object.keys(values.id).length) {
-      setDeleteTitleDetails({ id: toDelete.id, deleted: false })
+    const [open, setOpen] = useState(false);
+    const removeTitle = (e) => {
+      e.preventDefault()
+      if (deleteTitleDetails.id) {
+        setOpen(false)
+        setDeleteTitleDetails({ id: titleId, deleted: false })
+        window.location.reload(true)
+      }
     }
-  }
+  
+  
 
   useEffect(() => {
-    if (!deleteTitleDetails.deleted && deleteTitleDetails.id.length) {
+    if (!deleteTitleDetails.deleted && deleteTitleDetails.id) {
       deleteATitle()
       setDeleteTitleDetails({ ...deleteTitleDetails, deleted: true, id: [] })
     }
@@ -160,7 +166,6 @@ export default function EditTitle({ props }) {
     // validate(values);
     setValues({ ...values, afterSubmit: true });
     if (!errors.errors.length) { updateTitle() }
-    removeTitle();
     setVisible(false);
   }
   useEffect(() => {
@@ -196,9 +201,10 @@ export default function EditTitle({ props }) {
               <h3>Edit</h3>
             </Grid.Column>
             <Grid.Column width={15}>
-              <Button id={values.id}  icon floated='right' onClick={removeTitle}>
+              {/* <Button id={values.id}  icon floated='right' onClick={removeTitle}>
                 <Icon name='trash alternate' id={values.id}/>
-              </Button>
+              </Button> */}
+              <DeleteModal handleRemovalItem={removeTitle} />
             </Grid.Column>
           </Grid>
         </Header>

@@ -92,7 +92,7 @@ export default function Employers() {
                 <Table.Cell>{employer.phoneNumbers}</Table.Cell>
                 <Table.Cell>{employer.websiteLink}</Table.Cell>
                 <Table.Cell>{employer.contactName}</Table.Cell>
-                <Table.Cell>{employer.employerDetails}</Table.Cell>
+                <Table.Cell>{employer.employerDetails? employer.employerDetails.firstName:'no in house employer'}</Table.Cell>
               </Table.Row>)}
             </Table.Body>
           </Table>

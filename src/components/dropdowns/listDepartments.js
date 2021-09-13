@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-    Dropdown
+    Dropdown, Icon
 } from 'semantic-ui-react';
 
-export default function DepartmentDropDown({handleOnDepartmentSearch, handleOnDepartmentChange, departments: data, selected, multiple=true }) {
+export default function DepartmentDropDown({ handleOnDepartmentSearch, handleOnDepartmentChange, departments: data, selected, multiple = true }) {
 
 
     let allDepartments = []
@@ -29,7 +29,7 @@ export default function DepartmentDropDown({handleOnDepartmentSearch, handleOnDe
                 onChange={handleOnDepartmentChange}
                 onSearchChange={handleOnDepartmentSearch}
                 options={allDepartments}
-            />}
+                />}
         </div>
 
     )

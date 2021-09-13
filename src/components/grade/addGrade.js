@@ -56,10 +56,7 @@ export default function AddNewGrade({ props }) {
       setVisible(false);
       let gradeData = result.data.createGrade.grade
       context.createGrade(gradeData);
-      history.push({
-        pathname: `/performancemanager/grade/${gradeData.id}`,
-        state: { grade: gradeData, gradeId: gradeData.id }
-      })
+      window.location.reload(true);
 
       setSuccessMsg('Successfully Registered A New Grade');
     },
